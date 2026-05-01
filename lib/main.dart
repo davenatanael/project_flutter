@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_uts/game.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login.dart';
 
@@ -32,6 +33,10 @@ class MyApp extends StatelessWidget {
       title: 'Memory App',
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      routes: {
+        'game': (context) => const Game(),
+        // 'highscore': (context) => const Highscore(),
+      },
     );
   }
 }
@@ -69,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
             UserAccountsDrawerHeader(
               accountName: Text(
                 active_user,
-              ), // Nama dari global variable [cite: 466]
+              ),
               accountEmail: const Text("Pemain Aktif"),
               currentAccountPicture: const CircleAvatar(
                 child: Icon(Icons.person),
@@ -83,19 +88,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.pushNamed(
                   context,
                   'highscore',
-                ); // Rute ke layar High Score
+              );
               },
             ),
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text("Log Out"),
               onTap: () async {
-                // Logika Logout dari PPT [cite: 471]
+                // 
                 final prefs = await SharedPreferences.getInstance();
                 prefs.remove("user_name"); // Hapus sesi
                 active_user = "";
 
                 // Kembali ke Login
+                
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => MyLogin()),
@@ -105,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      // 2. Body dengan penjelasan cara bermain
+
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -118,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               const SizedBox(height: 10),
               const Text(
-                "Ingat gambar yang muncul selama 3 detik. "
+                "Ingat gambar yang muncul selama 3 detik per gambar "
                 "Pilih jawaban yang benar dari 4 opsi yang tersedia. "
                 "Semakin cepat menjawab, semakin tinggi poinmu!",
                 textAlign: TextAlign.center,
@@ -130,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   minimumSize: const Size(200, 50),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, 'permainan'); // Lanjut ke game
+                  Navigator.pushNamed(context, 'game'); 
                 },
                 child: const Text("PLAY GAME", style: TextStyle(fontSize: 18)),
               ),
