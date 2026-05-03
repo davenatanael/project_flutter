@@ -2,16 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart';
 
-class MyLogin extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: Login(),
-    );
-  }
-}
+
 
 class Login extends StatefulWidget {
   @override
@@ -24,7 +15,8 @@ class _LoginState extends State<Login> {
   void doLogin() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString("user_name", active_user);
-    main();
+    if (!mounted) return;
+    Navigator.pushReplacementNamed(context, 'home');
   }
 
   @override

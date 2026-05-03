@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:project_uts/class/game_round.dart';
+import 'dart:math' as math;
+import 'result.dart';
 
 class Game extends StatefulWidget {
   const Game({super.key});
@@ -27,31 +29,28 @@ class _GameState extends State<Game> {
   void initState() {
     super.initState();
     
-    _rounds.add(GameRound(
-      'assets/images/bird_1.png',
-      ['assets/images/bird_2.png', 'assets/images/bird_3.png', 'assets/images/bird_4.png', 'assets/images/bird_1.png'],
-      'assets/images/bird_1.png'
-    ));
-    _rounds.add(GameRound(
-      'assets/images/block_1.png',
-      ['assets/images/block_2.png', 'assets/images/block_3.png', 'assets/images/block_1.png', 'assets/images/block_4.png'],
-      'assets/images/block_1.png'
-    ));
-    _rounds.add(GameRound(
-      'assets/images/metal_1.png',
-      ['assets/images/metal_2.png', 'assets/images/metal_1.png', 'assets/images/metal_3.png', 'assets/images/metal_4.png'],
-      'assets/images/metal_1.png'
-    ));
-    _rounds.add(GameRound(
-      'assets/images/shield_01.png',
-      ['assets/images/shield_01.png', 'assets/images/shield_02.png', 'assets/images/shield_03.png', 'assets/images/shield_04.png'],
-      'assets/images/shield_01.png'
-    ));
-    _rounds.add(GameRound(
-      'assets/images/wood_1.png',
-      ['assets/images/wood_2.png', 'assets/images/wood_1.png', 'assets/images/wood_3.png', 'assets/images/wood_4.png'],
-      'assets/images/wood_1.png'
-    ));
+    final random = math.Random();
+
+    GameRound createRandomizedRound(List<String> images) {
+      String correct = images[random.nextInt(images.length)];
+      return GameRound(correct, List.from(images), correct);
+    }
+
+    _rounds.add(createRandomizedRound([
+      'assets/images/bird_1.png', 'assets/images/bird_2.png', 'assets/images/bird_3.png', 'assets/images/bird_4.png'
+    ]));
+    _rounds.add(createRandomizedRound([
+      'assets/images/block_1.png', 'assets/images/block_2.png', 'assets/images/block_3.png', 'assets/images/block_4.png'
+    ]));
+    _rounds.add(createRandomizedRound([
+      'assets/images/metal_1.png', 'assets/images/metal_2.png', 'assets/images/metal_3.png', 'assets/images/metal_4.png'
+    ]));
+    _rounds.add(createRandomizedRound([
+      'assets/images/shield_01.png', 'assets/images/shield_02.png', 'assets/images/shield_03.png', 'assets/images/shield_04.png'
+    ]));
+    _rounds.add(createRandomizedRound([
+      'assets/images/wood_1.png', 'assets/images/wood_2.png', 'assets/images/wood_3.png', 'assets/images/wood_4.png'
+    ]));
 
     _rounds.shuffle();
 
@@ -106,7 +105,16 @@ class _GameState extends State<Game> {
 
   void endGame() {
     _timer.cancel();
-    
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ResultScreen(
+          score: _score,
+          correctGuesses: _correct,
+          totalGuesses: _rounds.length,
+        ),
+      ),
+    );
   }
 
   @override
@@ -135,6 +143,10 @@ class _GameState extends State<Game> {
               CircularPercentIndicator(
                 radius: 60.0,
                 lineWidth: 10.0,
+                //animasi timer bar
+                animation: true,
+                animateFromLastPercent: true,
+                animationDuration: _timeLeft == _maxTime ? 0 : 1000,
                 percent: _timeLeft / _maxTime,
                 center: Text("$_timeLeft s", style: const TextStyle(fontSize: 20)),
                 progressColor: memorizing ? Colors.blue : Colors.red,
@@ -153,20 +165,25 @@ class _GameState extends State<Game> {
                   runSpacing: 15,
                   alignment: WrapAlignment.center,
                   children: _rounds[_indexRound].options.map((option) {
-                    return GestureDetector(
-                      onTap: () => checkAnswer(option),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey, width: 2),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.asset(
-                            option,
-                            height: 140,
-                            width: 140,
-                            fit: BoxFit.cover,
+                    // animasi gestur waktu dipencet atau dihold
+                    return Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () => checkAnswer(option),
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey, width: 2),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.asset(
+                              option,
+                              height: 140,
+                              width: 140,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),

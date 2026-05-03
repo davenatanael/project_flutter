@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project_uts/game.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login.dart';
+import 'highscore.dart';
 
 String active_user = "";
 
@@ -9,10 +10,10 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   checkUser().then((String result) {
     if (result == '') {
-      runApp(MyLogin());
+      runApp(const AppRoot(isLoggedIn: false));
     } else {
       active_user = result;
-      runApp(MyApp());
+      runApp(const AppRoot(isLoggedIn: true));
     }
   });
 }
@@ -23,19 +24,21 @@ Future<String> checkUser() async {
   return userName;
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class AppRoot extends StatelessWidget {
+  final bool isLoggedIn;
+  const AppRoot({super.key, required this.isLoggedIn});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Memory App',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple)),
+      home: isLoggedIn ? const MyHomePage(title: 'Flutter Demo Home Page') : Login(),
       routes: {
         'game': (context) => const Game(),
-        // 'highscore': (context) => const Highscore(),
+        'highscore': (context) => const Highscore(),
+        'login': (context) => Login(),
+        'home': (context) => const MyHomePage(title: 'Flutter Demo Home Page'),
       },
     );
   }
@@ -101,11 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 active_user = "";
 
                 // Kembali ke Login
-                
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyLogin()),
-                );
+                Navigator.pushReplacementNamed(context, 'login');
               },
             ),
           ],
