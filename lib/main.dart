@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_uts/game.dart';
+import 'package:project_uts/highscore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login.dart';
 
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
       routes: {
         'game': (context) => const Game(),
-        // 'highscore': (context) => const Highscore(),
+        'highscore': (context) => const Highscore(),
       },
     );
   }

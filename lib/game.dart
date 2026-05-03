@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:project_uts/class/game_round.dart';
+import 'package:project_uts/hasil.dart';
 
 class Game extends StatefulWidget {
   const Game({super.key});
@@ -106,8 +107,19 @@ class _GameState extends State<Game> {
 
   void endGame() {
     _timer.cancel();
-    
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Hasil(
+          score: _score,
+          correct: _correct,
+          totalQuestions: _rounds.length,
+        ),
+      ),
+    );
   }
+
 
   @override
   void dispose() {
