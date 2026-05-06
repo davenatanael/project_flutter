@@ -119,6 +119,11 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
+                "Kelompok : Kicau Mania, Dave Natanael (160423007) & Kevin  Hendrawan (160422134)",
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              const Text(
                 "Cara Bermain:",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
@@ -127,6 +132,27 @@ class _MyHomePageState extends State<MyHomePage> {
                 "Ingat gambar yang muncul selama 3 detik per gambar "
                 "Pilih jawaban yang benar dari 4 opsi yang tersedia. "
                 "Semakin cepat menjawab, semakin tinggi poin",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                "Credits: (Unity Store)",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+              ),
+              const Text(
+                "Landscape Tiles & Birds (Free) by Kin Ng",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+              ),
+              const Text(
+                "Shields - 40 Fantasy Icons by The Higalina Vault",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+              ),
+              const Text(
+                "RPG icons free starter pack by icreatepixels",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16),
               ),
