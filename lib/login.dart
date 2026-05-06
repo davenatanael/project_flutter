@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart';
 
-
-
 class Login extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -15,7 +13,7 @@ class _LoginState extends State<Login> {
   void doLogin() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString("user_name", active_user);
-    if (!mounted) return;
+    // pushReplacement supaya layar direplace
     Navigator.pushReplacementNamed(context, 'home');
   }
 
@@ -40,7 +38,7 @@ class _LoginState extends State<Login> {
               child: TextField(
                 onChanged: (v) {
                   active_user =
-                      v; // Tambahkan ini agar variabel global terisi [cite: 440]
+                      v; //mengisi value variabel active_user saat textfield changed
                 },
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -71,6 +69,7 @@ class _LoginState extends State<Login> {
                 ),
                 child: ElevatedButton(
                   onPressed: () {
+                    //memanggil method doLogin()
                     doLogin();
                   },
                   child: Text('Login', style: TextStyle(fontSize: 25)),

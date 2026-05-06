@@ -29,13 +29,14 @@ class _GameState extends State<Game> {
   void initState() {
     super.initState();
     
+    //algoritma utk randomize tebakan yg benar
     final random = math.Random();
-
     GameRound createRandomizedRound(List<String> images) {
       String correct = images[random.nextInt(images.length)];
       return GameRound(correct, List.from(images), correct);
     }
 
+    //setiap round .add manual menyeusaikan nama image
     _rounds.add(createRandomizedRound([
       'assets/images/bird_1.png', 'assets/images/bird_2.png', 'assets/images/bird_3.png', 'assets/images/bird_4.png'
     ]));
@@ -53,6 +54,7 @@ class _GameState extends State<Game> {
     ]));
 
     _rounds.shuffle();
+    // .shuffle utk mengacak
 
     for (var round in _rounds) {
       round.options.shuffle();
@@ -110,7 +112,7 @@ class _GameState extends State<Game> {
       MaterialPageRoute(
         builder: (context) => ResultScreen(
           score: _score,
-          correctGuesses: _correct,
+          correct: _correct,
           totalGuesses: _rounds.length,
         ),
       ),
@@ -152,44 +154,57 @@ class _GameState extends State<Game> {
                 progressColor: memorizing ? Colors.blue : Colors.red,
               ),
               const SizedBox(height: 30),
-              if (memorizing)
-                Image.asset(
-                  _rounds[_indexRound].targetImage,
-                  height: 250,
-                  width: 250,
-                  fit: BoxFit.contain,
-                )
-              else
-                Wrap(
-                  spacing: 15,
-                  runSpacing: 15,
-                  alignment: WrapAlignment.center,
-                  children: _rounds[_indexRound].options.map((option) {
-                    // animasi gestur waktu dipencet atau dihold
-                    return Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () => checkAnswer(option),
-                        borderRadius: BorderRadius.circular(10),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 2),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.asset(
-                              option,
-                              height: 140,
-                              width: 140,
-                              fit: BoxFit.cover,
+              
+              //mengatur animation
+              AnimatedSwitcher(
+                //durasi transisi antar widget 500 ms
+                duration: const Duration(milliseconds: 500),
+                //ScaleTransition = gambar membesar/mengecil saat berganti
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return ScaleTransition(scale: animation, child: child);
+                },
+                // if memorizing
+                child: memorizing
+                    ? Image.asset(
+                        _rounds[_indexRound].targetImage,
+                        key: const ValueKey('gambar_mengingat'),
+                        height: 250,
+                        width: 250,
+                        fit: BoxFit.contain,
+                      )
+                    : Wrap(
+                        // key untuk kumpulan opsi jawaban
+                        key: const ValueKey('opsi_jawaban'),
+                        spacing: 15,
+                        runSpacing: 15,
+                        alignment: WrapAlignment.center,
+                        children: _rounds[_indexRound].options.map((option) {
+                          // animasi gestur waktu dipencet/dihold
+                          return Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () => checkAnswer(option),
+                              borderRadius: BorderRadius.circular(10),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey, width: 2),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.asset(
+                                    option,
+                                    height: 140,
+                                    width: 140,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        }).toList(),
                       ),
-                    );
-                  }).toList(),
-                ),
+              ),
             ],
           ),
         ),

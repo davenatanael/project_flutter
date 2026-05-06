@@ -4,13 +4,13 @@ import 'main.dart';
 
 class ResultScreen extends StatefulWidget {
   final int score;
-  final int correctGuesses;
+  final int correct;
   final int totalGuesses;
 
   const ResultScreen({
     super.key,
     required this.score,
-    required this.correctGuesses,
+    required this.correct,
     required this.totalGuesses,
   });
 
@@ -25,12 +25,14 @@ class _ResultScreenState extends State<ResultScreen> {
   @override
   void initState() {
     super.initState();
+    //initialize determineTitle() utk menentukan gelar berdasarkan jumlah tebakan benar
     _determineTitle();
     _checkAndSaveHighScore();
   }
 
   void _determineTitle() {
-    switch (widget.correctGuesses) {
+    //switch case (if else) ini utk menentukan title berdasarkan jumlah tebakan
+    switch (widget.correct) {
       case 5:
         title = "Maestro dell'Indovinello (Master of Riddles)";
         break;
@@ -92,7 +94,7 @@ class _ResultScreenState extends State<ResultScreen> {
               ),
               const SizedBox(height: 10),
               Text(
-                "Tebakan Benar: ${widget.correctGuesses} dari ${widget.totalGuesses}",
+                "Tebakan Benar: ${widget.correct} dari ${widget.totalGuesses}",
                 style: const TextStyle(fontSize: 20),
               ),
               const SizedBox(height: 30),

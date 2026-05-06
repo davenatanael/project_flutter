@@ -9,6 +9,7 @@ String active_user = "";
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   checkUser().then((String result) {
+    //isLoggenIn adalah bool utk mengetahui user sudah log in atau belum
     if (result == '') {
       runApp(const AppRoot(isLoggedIn: false));
     } else {
@@ -25,6 +26,7 @@ Future<String> checkUser() async {
 }
 
 class AppRoot extends StatelessWidget {
+  //isLoggenIn adalah bool utk mengetahui user sudah log in atau belum
   final bool isLoggedIn;
   const AppRoot({super.key, required this.isLoggedIn});
 
@@ -34,6 +36,7 @@ class AppRoot extends StatelessWidget {
       title: 'Memory App',
       theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple)),
       home: isLoggedIn ? const MyHomePage(title: 'Flutter Demo Home Page') : Login(),
+      //home:... ini supaya kalau user sudah log in, langsung ke home page.
       routes: {
         'game': (context) => const Game(),
         'highscore': (context) => const Highscore(),
@@ -59,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     checkUser().then(
       (value) => setState(() {
-        active_user = value;
+        active_user = value; //assign value active_user
       }),
     );
   }
@@ -98,12 +101,10 @@ class _MyHomePageState extends State<MyHomePage> {
               leading: const Icon(Icons.logout),
               title: const Text("Log Out"),
               onTap: () async {
-                // 
                 final prefs = await SharedPreferences.getInstance();
-                prefs.remove("user_name"); // Hapus sesi
+                prefs.remove("user_name"); //hapus sharedpref saat logout
                 active_user = "";
-
-                // Kembali ke Login
+                // pushReplacement supaya layar direplace
                 Navigator.pushReplacementNamed(context, 'login');
               },
             ),
@@ -125,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
               const Text(
                 "Ingat gambar yang muncul selama 3 detik per gambar "
                 "Pilih jawaban yang benar dari 4 opsi yang tersedia. "
-                "Semakin cepat menjawab, semakin tinggi poinmu!",
+                "Semakin cepat menjawab, semakin tinggi poin",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16),
               ),
